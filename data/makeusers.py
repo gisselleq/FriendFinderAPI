@@ -1,8 +1,10 @@
 import json
 from faker import Faker
 import random
+from sentence_transformers import SentenceTransformer
 
 fake = Faker()
+model = SentenceTransformer('all-MiniLM-L6-v2')
 
 interest_pool= [
     "gaming","music","sports","movies","reading","cooking","traveling","photography","fashion","art","technology","programming","design","writing","dancing","singing","yoga","meditation","hiking","cycling","swimming","running","weightlifting"
@@ -29,17 +31,21 @@ def generate_users(num_users):
         selected_interests = random.sample(interest_pool, 2)
         bio = random.choice(bio_templates).format(interest1=selected_interests[0], interest2=selected_interests[1])
 
+        embeddings = model.encode(bio).tolist()
+
         user = {
             "id": str(user_id),
             "name": fake.name(),
             "bio": bio,
-            "interests": selected_interests
+            "interests": selected_interests,
+            'embeddings': embeddings
+
         }
         users[user_id] = user
     return users
 
 # number of users that are gunna be generated
-num_users = 20
+num_users = 10
 
 # put users in json file
 users = generate_users(num_users)
