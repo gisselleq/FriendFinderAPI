@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from sentence_transformers import SentenceTransformer, util
+import json
 
 app = Flask(__name__)
 
@@ -18,26 +19,56 @@ def home():
 # register a new user
 @app.route('/register', methods=['POST'])
 def register():
-    data = request.get_json()
-    user_id = data['user_id']
-    name = data['name']
-    bio = data['bio']
-    interests = data['interests']  
+    try:
+       
+        print(f"Request JSON: {request.json}")
+
+        
+        if not request.is_json:
+            return jsonify({"error": "Request must be JSON. Ensure Content-Type is application/json."}), 400
+
+        data = request.json
+
+       # make sure input data has everything 
+        required_keys = ['user_id', 'name', 'bio', 'interests']
+        missing_keys = [key for key in required_keys if key not in data]
+
+        if missing_keys:
+            return jsonify({"error": f"Missing keys in request: {missing_keys}"}), 400
+
+        user_id = data['user_id']
+        try:
+                with open('data/users.json', 'r') as f:
+                    users = json.load(f)
+        except FileNotFoundError:
+            users = {}
+        except json.JSONDecodeError:
+            return jsonify({"error": "Invalid JSON format in request."}), 500
+            
+  
+
+      
+
+        # see if user_id already exists
+        if user_id in users:
+            return jsonify({"error": f"User with id {user_id} already exists."}), 409
+
+        # Add user to database (in-memory for now)
+        users[user_id] = {
+            "name": data['name'],
+            "bio": data['bio'],
+            "interests": data['interests'],
+        }
 
 
-    if user_id in users:
-        return jsonify({'message': 'User already exists'}), 400
+        with open('data/users.json', 'w') as f:
+            json.dump(users, f, indent=4)
 
-    users[user_id] = {
-        'name': name,
-        'bio': bio,
-        'embeddings': model.encode(bio),
-        'interests': interests,
+        return jsonify({"message": f"User {name} registered successfully!"}), 201
 
-    }
-
-
-    return jsonify({'message': 'User registered successfully'}), 201
+    except Exception as e:
+        # Catch unexpected errors
+        return jsonify({"error": f"Internal server error: {str(e)}"}), 500
 
     # suggestions
 @app.route('/suggestions', methods=['GET'])
