@@ -36,7 +36,7 @@ def register():
 
             user_id = data['user_id']
 
-            # Read current users from the file
+            # reads users from the users.json file
             try:
                 with open('data/users.json', "r") as file:
                     users = json.load(file)
@@ -50,14 +50,14 @@ def register():
             if user_id in users:
                 return jsonify({"error": f"User with id {user_id} already exists."}), 409
 
-            # Add the new user
+            # add the new user
             users[user_id] = {
                 "name": data['name'],
                 "bio": data['bio'],
                 "interests": data['interests']
             }
 
-            # Save updated users to the file
+            # save users to file
             with open('data/users.json', "w") as file:
                 json.dump(users, file, indent=4)
 
