@@ -49,12 +49,16 @@ def register():
 
             if user_id in users:
                 return jsonify({"error": f"User with id {user_id} already exists."}), 409
+            
+            # generate embedding 
+            embeddings = model.encode(data['bio']).tolist()
 
             # add the new user
             users[user_id] = {
                 "name": data['name'],
                 "bio": data['bio'],
-                "interests": data['interests']
+                "interests": data['interests'],
+                "embeddings": embeddings
             }
 
             # save users to file
