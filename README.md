@@ -81,7 +81,7 @@ The FriendFinderAPI is a project that was designed to help users find friends ba
 
 ## Author
 **Gisselle Quiroz**
-Contact: gquiroz@lamar.edu
+- Contact: gquiroz@lamar.edu
 
 
 
