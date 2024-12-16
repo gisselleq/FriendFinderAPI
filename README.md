@@ -1,4 +1,4 @@
-# FriendFidnerAPI: AI-Driven Matchmaking
+# FriendFinderAPI: AI-Driven Matchmaking
 
 ## Overview
 The FriendFinderAPI is a project that was designed to help users find friends based on their shared interests.
