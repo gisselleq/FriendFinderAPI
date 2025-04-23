@@ -16,7 +16,7 @@ The FriendFinderAPI is a project that was designed to help users find friends ba
 - **Programming Language**: Python
 - **Framework**: Flask
 - **Libraries**: Sentence Transformers
-**Embedding Model**: all-MiniLM-L6-v2
+- **Embedding Model**: all-MiniLM-L6-v2
 
 ---
 
